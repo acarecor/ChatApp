@@ -16,7 +16,7 @@ const Chat = ({ db, route, navigation, isConnected }) => {
         try{
             await AsyncStorage.setItem('allmessages', JSON.stringify(messagesToCache));
         } catch (error){
-            console.log(error.mesage);
+            console.log(error.message);
         }
     }
 
