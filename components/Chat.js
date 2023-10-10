@@ -9,7 +9,7 @@ const Chat = ({ db, route, navigation }) => {
     const { name, bgOptions, userID } = route.params;
     //messages state initialization
     const [messages, setMessages] = useState([]);
-    console.log('chat', name);
+   
 
     useEffect(() => {
         navigation.setOptions({title: name});
