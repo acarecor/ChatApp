@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { StyleSheet, View, KeyboardAvoidingView, Platform} from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+import AsyncStorage  from "@react-native-async-storage/async-storage";
 
 
 // render the screen2, use props route, navigation and data base (db)
@@ -10,6 +11,19 @@ const Chat = ({ db, route, navigation }) => {
     //messages state initialization
     const [messages, setMessages] = useState([]);
    
+    //fetch messages from the Firestore database and cache messages 
+    const cacheMessages = async(messagesToCache)=>{
+        try{
+            await AsyncStorage.setItem('allmessages', JSON.stringify(messagesToCache));
+        } catch (error){
+            console.log(error.mesage);
+        }
+    }
+     // load cached messages from the local storage 
+    const loadCachedMessages = async () => {
+        const cachedMessages = await AsyncStorage.getItem('allmessages') || [];
+        setMessages(JSON.parse(cachedMessages));
+    }
 
     useEffect(() => {
         navigation.setOptions({title: name});
