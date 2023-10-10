@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, View, KeyboardAvoidingView, Platform} from "react-native";
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { StyleSheet, View, KeyboardAvoidingView, Platform, Alert} from "react-native";
+import { GiftedChat, Bubble, ImputToolbar } from "react-native-gifted-chat";
 import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
 import AsyncStorage  from "@react-native-async-storage/async-storage";
 
@@ -19,11 +19,13 @@ const Chat = ({ db, route, navigation, isConnected }) => {
             console.log(error.mesage);
         }
     }
+
      // load cached messages from the local storage 
     const loadCachedMessages = async () => {
         const cachedMessages = await AsyncStorage.getItem('allmessages') || [];
         setMessages(JSON.parse(cachedMessages));
     }
+
     let unsubMessages;
 
     useEffect(() => {
@@ -67,20 +69,26 @@ const Chat = ({ db, route, navigation, isConnected }) => {
             }} 
           />
         )}
-
+//to prevent Gifted Chat from rendering the imput tool bar, so user can't compose new messages 
+    const renderInputToolbar = (prop) => {
+        if (isConnected) return <InputToolbar {...prop} />;
+        else return null;
+    }
 
     return(
         <View style={[styles.container, {backgroundColor: bgOptions}]}>
-            
+            {(isConnected === true) ? 
             <GiftedChat 
             messages={messages}
             renderBubble={renderBubble}
+            renderInputToolbar={renderInputToolbar}
             onSend={(messages)=> onSend(messages)} /* function onSend is called when a user send a message */
             user={{
                 _id: userID,
                 name: name,
             }}
-            />
+            /> : null
+            }
             { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null } 
         </View>
 
