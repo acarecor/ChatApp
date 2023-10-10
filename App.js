@@ -7,7 +7,7 @@ import Start from './components/Start';
 import Chat from './components/Chat';
 //import to initialize a connection for Firestore
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, disableNetwork, enableNetwork } from 'firebase/firestore';
 //netinfo for dectecting a network connection 
 import{useNetInfo} from '@react-native-community/netinfo';
 import { useEffect } from 'react';
