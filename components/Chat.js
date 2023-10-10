@@ -1,108 +1,131 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, View, KeyboardAvoidingView, Platform, Alert} from "react-native";
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+} from "react-native";
 import { GiftedChat, Bubble, ImputToolbar } from "react-native-gifted-chat";
-import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
-import AsyncStorage  from "@react-native-async-storage/async-storage";
-
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // render the screen2, use props route, navigation,  data base (db), isConnected
 const Chat = ({ db, route, navigation, isConnected }) => {
-    const { name, bgOptions, userID } = route.params;
-    //messages state initialization
-    const [messages, setMessages] = useState([]);
-   
-    //fetch messages from the Firestore database and cache messages 
-    const cacheMessages = async(messagesToCache)=>{
-        try{
-            await AsyncStorage.setItem('allmessages', JSON.stringify(messagesToCache));
-        } catch (error){
-            console.log(error.message);
-        }
+  const { name, bgOptions, userID } = route.params;
+  //messages state initialization
+  const [messages, setMessages] = useState([]);
+
+  //fetch messages from the Firestore database and cache messages
+  const cacheMessages = async (messagesToCache) => {
+    try {
+      await AsyncStorage.setItem(
+        "allmessages",
+        JSON.stringify(messagesToCache)
+      );
+    } catch (error) {
+      console.log(error.message);
     }
+  };
 
-     // load cached messages from the local storage 
-    const loadCachedMessages = async () => {
-        const cachedMessages = await AsyncStorage.getItem('allmessages') || [];
-        setMessages(JSON.parse(cachedMessages));
-    }
+  // load cached messages from the local storage
+  const loadCachedMessages = async () => {
+    const cachedMessages = (await AsyncStorage.getItem("allmessages")) || [];
+    setMessages(JSON.parse(cachedMessages));
+  };
 
-    let unsubMessages;
+  let unsubMessages;
 
-    useEffect(() => {
-        navigation.setOptions({title: name});
-// only fetch messages from Firestore db if there's a network connection otherwise, call loadCachedMessages():
-        if (isConnected === true) {
-            // unregister current onSnapshot() listener to avoid registering multiple listeners when
+  useEffect(() => {
+    navigation.setOptions({ title: name });
+    // only fetch messages from Firestore db if there's a network connection otherwise, call loadCachedMessages():
+    if (isConnected === true) {
+      // unregister current onSnapshot() listener to avoid registering multiple listeners when
       // useEffect code is re-executed.
-            if(unsubMessages)unsubMessages();
-            unsubMessages = null;
-        //function to fetch messages to database in real time
-       const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-        unsubMessages = onSnapshot(q, (docs)=> {
+      if (unsubMessages) unsubMessages();
+      unsubMessages = null;
+      //function to fetch messages to database in real time
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+      unsubMessages = onSnapshot(q, (docs) => {
         let newMessages = [];
-        docs.forEach(doc => {
-            newMessages.push({id: doc.id, ...doc.data(), createdAt: new Date(doc.data().createdAt.toMillis()) })
+        docs.forEach((doc) => {
+          newMessages.push({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: new Date(doc.data().createdAt.toMillis()),
+          });
         });
         cacheMessages(newMessages);
         setMessages(newMessages);
-       });
-    } else loadCachedMessages ();
+      });
+    } else loadCachedMessages();
 
-       return ()=> {
-        if(unsubMessages){unsubMessages();}
-       }
-    }, [isConnected]);
-    
-    // displays all previous messages 
-     const onSend = (newMessages) => {
-        addDoc(collection(db, "messages"), newMessages[0]); 
-           };
+    return () => {
+      if (unsubMessages) {
+        unsubMessages();
+      }
+    };
+  }, [isConnected]);
 
-    //function to change the color of the default speech bubble of GiftedChat
-    const renderBubble = (props) => { 
-        return ( 
-          <Bubble 
-            {...props} 
-            wrapperStyle={{
-                right: { backgroundColor: '#4d7996', }, 
-                left: { backgroundColor: '#fff', }, 
-            }} 
-          />
-        )}
-//to prevent Gifted Chat from rendering the imput tool bar, so user can't compose new messages 
-    const renderInputToolbar = (prop) => {
-        if (isConnected) return <InputToolbar {...prop} />;
-        else return null;
-    }
+  // displays all previous messages
+  const onSend = (newMessages) => {
+    addDoc(collection(db, "messages"), newMessages[0]);
+  };
 
-    return(
-        <View style={[styles.container, {backgroundColor: bgOptions}]}>
-            {(isConnected === true) ? 
-            <GiftedChat 
-            messages={messages}
-            renderBubble={renderBubble}
-            renderInputToolbar={renderInputToolbar}
-            onSend={(messages)=> onSend(messages)} /* function onSend is called when a user send a message */
-            user={{
-                _id: userID,
-                name: name,
-            }}
-            /> : null
-            }
-            { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null } 
-        </View>
-
+  //function to change the color of the default speech bubble of GiftedChat
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: { backgroundColor: "#4d7996" },
+          left: { backgroundColor: "#fff" },
+        }}
+      />
     );
-}
+  };
+  //to prevent Gifted Chat from rendering the imput tool bar, so user can't compose new messages
+  const renderInputToolbar = (prop) => {
+    if (isConnected) return <InputToolbar {...prop} />;
+    else return null;
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: bgOptions }]}>
+      {isConnected === true ? (
+        <GiftedChat
+          messages={messages}
+          renderBubble={renderBubble}
+          renderInputToolbar={renderInputToolbar}
+          onSend={(messages) =>
+            onSend(messages)
+          } /* function onSend is called when a user send a message */
+          user={{
+            _id: userID,
+            name: name,
+          }}
+        />
+      ) : null}
+      {Platform.OS === "android" ? (
+        <KeyboardAvoidingView behavior="height" />
+      ) : null}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1, 
-       
+  container: {
+    flex: 1,
+
     alignContent: "center",
     textAlign: "center",
-    },
-
+  },
 });
 
 export default Chat;

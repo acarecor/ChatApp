@@ -11,7 +11,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Alert
+  Alert,
 } from "react-native";
 //
 import { getAuth, signInAnonymously } from "firebase/auth";
@@ -35,21 +35,21 @@ const Start = ({ navigation }) => {
 
   //initialize Firebase authentication
   const auth = getAuth();
-  
+
   //function to sign in user anonymously
   const signInUser = () => {
     signInAnonymously(auth)
-    .then ((result) => {
-      navigation.navigate("Chat", 
-      {userID: result.user.uid, 
-       name: name,
-       bgOptions: bgOptions
+      .then((result) => {
+        navigation.navigate("Chat", {
+          userID: result.user.uid,
+          name: name,
+          bgOptions: bgOptions,
+        });
+        Alert.alert("Signed in Successfully!");
+      })
+      .catch((error) => {
+        Alert.alert("Unable to sign in, try later again.");
       });
-      Alert.alert("Signed in Successfully!");
-    })
-    .catch((error)=> {
-      Alert.alert("Unable to sign in, try later again.");
-    })
   };
 
   return (
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     height: "44%",
     alignSelf: "center",
     fontSize: 16,
-    borderRadius:25
+    borderRadius: 25,
   },
 
   text: {
@@ -207,13 +207,13 @@ const styles = StyleSheet.create({
 
   button: {
     fontSize: 16,
-    fontWeight: "600", 
+    fontWeight: "600",
     width: "88%",
     padding: 20,
     margin: 20,
     backgroundColor: "#757083",
     alignSelf: "center",
-    borderRadius:10
+    borderRadius: 10,
   },
   buttonText: {
     fontSize: 16,
