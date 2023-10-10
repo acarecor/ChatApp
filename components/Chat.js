@@ -4,7 +4,6 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from "react-native";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import {
@@ -26,7 +25,7 @@ const Chat = ({ db, route, navigation, isConnected }) => {
   const cacheMessages = async (messagesToCache) => {
     try {
       await AsyncStorage.setItem(
-        "allmessages",
+        'messages',
         JSON.stringify(messagesToCache)
       );
     } catch (error) {
@@ -36,7 +35,7 @@ const Chat = ({ db, route, navigation, isConnected }) => {
 
   // load cached messages from the local storage
   const loadCachedMessages = async () => {
-    const cachedMessages = (await AsyncStorage.getItem("allmessages")) || [];
+    const cachedMessages = (await AsyncStorage.getItem('messages')) || [];
     setMessages(JSON.parse(cachedMessages));
   };
 
@@ -75,7 +74,7 @@ const Chat = ({ db, route, navigation, isConnected }) => {
 
   // displays all previous messages
   const onSend = (newMessages) => {
-    addDoc(collection(db, "messages"), newMessages[0]);
+    addDoc(collection(db, 'messages'), newMessages[0]);
   };
 
   //function to change the color of the default speech bubble of GiftedChat
@@ -98,7 +97,7 @@ const Chat = ({ db, route, navigation, isConnected }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: bgOptions }]}>
-      {isConnected === true ? (
+      
         <GiftedChat
           messages={messages}
           renderBubble={renderBubble}
@@ -111,10 +110,10 @@ const Chat = ({ db, route, navigation, isConnected }) => {
             name: name,
           }}
         />
-      ) : null}
-      {Platform.OS === "android" ? (
+    
+      {Platform.OS === "android" ? 
         <KeyboardAvoidingView behavior="height" />
-      ) : null}
+       : null}
     </View>
   );
 };
