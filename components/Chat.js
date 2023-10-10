@@ -5,8 +5,8 @@ import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firesto
 import AsyncStorage  from "@react-native-async-storage/async-storage";
 
 
-// render the screen2, use props route, navigation and data base (db)
-const Chat = ({ db, route, navigation }) => {
+// render the screen2, use props route, navigation,  data base (db), isConnected
+const Chat = ({ db, route, navigation, isConnected }) => {
     const { name, bgOptions, userID } = route.params;
     //messages state initialization
     const [messages, setMessages] = useState([]);
@@ -24,24 +24,34 @@ const Chat = ({ db, route, navigation }) => {
         const cachedMessages = await AsyncStorage.getItem('allmessages') || [];
         setMessages(JSON.parse(cachedMessages));
     }
+    let unsubMessages;
 
     useEffect(() => {
         navigation.setOptions({title: name});
+// only fetch messages from Firestore db if there's a network connection otherwise, call loadCachedMessages():
+        if (isConnected === true) {
+            // unregister current onSnapshot() listener to avoid registering multiple listeners when
+      // useEffect code is re-executed.
+            if(unsubMessages)unsubMessages();
+            unsubMessages = null;
         //function to fetch messages to database in real time
        const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-       const unsubMessages = onSnapshot(q, (docs)=> {
+        unsubMessages = onSnapshot(q, (docs)=> {
         let newMessages = [];
         docs.forEach(doc => {
             newMessages.push({id: doc.id, ...doc.data(), createdAt: new Date(doc.data().createdAt.toMillis()) })
         });
+        cacheMessages(newMessages);
         setMessages(newMessages);
        });
+    } else loadCachedMessages ();
+
        return ()=> {
         if(unsubMessages){unsubMessages();}
        }
-    }, []);
+    }, [isConnected]);
     
-    // messages 
+    // displays all previous messages 
      const onSend = (newMessages) => {
         addDoc(collection(db, "messages"), newMessages[0]); 
            };
