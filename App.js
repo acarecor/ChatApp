@@ -1,4 +1,4 @@
-import { StyleSheet, LogBox } from "react-native";
+import { StyleSheet, LogBox, Alert } from "react-native";
 //import react navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
