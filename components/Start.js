@@ -35,7 +35,7 @@ const Start = ({ navigation }) => {
 
   //initialize Firebase authentication
   const auth = getAuth();
-  console.log('start', name);
+  
   //function to sign in user anonymously
   const signInUser = () => {
     signInAnonymously(auth)
