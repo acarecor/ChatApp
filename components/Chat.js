@@ -15,9 +15,10 @@ import {
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomActions from './CustomActions';
+import MapView from 'react-native-maps';
 
 // render the screen2, use props route, navigation,  data base (db), isConnected
-const Chat = ({ db, route, navigation, isConnected }) => {
+const Chat = ({ db, route, navigation, isConnected, storage}) => {
   const { name, bgOptions, userID } = route.params;
   //messages state initialization
   const [messages, setMessages] = useState([]);
@@ -97,8 +98,31 @@ const Chat = ({ db, route, navigation, isConnected }) => {
   };
 //passing these props to the CustomAction component 
   const renderCustomActions =(props) => {
-return <CustomActions {...props}/>;
+  return <CustomActions 
+          storage={storage}
+          {...props}/>;
   };
+//will check if the currentMessage contains location data
+  const renderCustomView =(props)=>{
+    const{ currentMessage} = props;
+    if(currentMessage.location){
+      return(
+        <MapView
+          style={{width: 150,
+            height: 100,
+            borderRadius: 13,
+             margin: 3}}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        }}
+      />
+      );
+    }
+    return null;
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: bgOptions }]}>
@@ -108,6 +132,7 @@ return <CustomActions {...props}/>;
           renderBubble={renderBubble}
           renderInputToolbar={renderInputToolbar}
           renderActions={renderCustomActions}
+          renderCustomView={renderCustomView}
           onSend={(messages) =>
             onSend(messages)
           } /* function onSend is called when a user send a message */

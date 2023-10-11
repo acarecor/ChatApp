@@ -15,6 +15,7 @@ import {
 //netinfo for dectecting a network connection
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useEffect } from "react";
+import {getStorage} from 'firebase/storage';
 
 LogBox.ignoreLogs(["AsyncStorage has been extracted from"]);
 
@@ -38,6 +39,9 @@ const App = () => {
 
   // Initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app);
+
+  //initialize storage in Firebase
+  const storage= getStorage(app);
 
   // useNetInfo to define a new state that represents network connectivity status
   const connectionStatus = useNetInfo();
@@ -65,6 +69,7 @@ const App = () => {
             <Chat
               isConnected={connectionStatus.isConnected}
               db={db}
+              storage={storage}
               {...props}
             />
           )}
