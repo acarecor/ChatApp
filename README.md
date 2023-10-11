@@ -8,8 +8,8 @@ The app will provide users with a chat interface and options to share images and
 * React Native
 * Expo
 * React Native Gifted Chat library
-* Firebase Cloud Storage , 
-* Firestore Database, 
+* Google Firebase Cloud Storage , 
+* Google Firestore Database, 
 * Android Studio emulator
 * Expo ImagePicker and Location
 
