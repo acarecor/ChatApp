@@ -54,7 +54,7 @@ const CustomActions = ({
       else Alert.alert("Permissions haven't been granted");
     }
   };
-  
+
 //allow a photo to be taken when the user gives permission
   const takePhoto = async () => {
     let permissions = await ImagePicker.requestCameraPermissionsAsync();
@@ -80,7 +80,7 @@ const CustomActions = ({
     } else Alert.alert("Permissions to read location aren't granted");
   };
 
-  //
+  //to create a unique reference string each time a new file is loaded.
   const generateReference = (uri) => {
     const timeStamp = new Date().getTime();
     const imageName = uri.split("/")[uri.split("/").length - 1];
@@ -101,7 +101,7 @@ const CustomActions = ({
       xhr.send();
     });
   };
-
+//uploading and sending the image as a message 
   const uploadAndSendImage = async (imageURI) => {
     const uniqueRefString = generateReference(imageURI);
     const blob = await convertFileToBlob(imageURI);
