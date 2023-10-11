@@ -10,7 +10,25 @@ const CustomActions = (wrapperStyle, iconTextStyle) => {
     const onActionPress = () => {
         const options = ['Choose From Library', 'Take a Picture', 'Send Location', 'Cancel'];
         const cancelButtonIndex = options.length -1;
-    }
+        actionSheet.showActionSheetWithOptions(
+            {
+                options, 
+                cancelButtonIndex,
+            },
+            async(buttonIndex)=> {
+              switch(buttonIndex){
+                case 0:
+                    console.log('user wants to pick an image');
+                    return;
+                case 1:
+                    console.log('user wants to take a photo');
+                    return;
+                case 2:
+                    console.log('user wants to get their location');
+                default:
+            }},
+        );
+    };
 
 
 return(
