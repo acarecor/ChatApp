@@ -2,12 +2,12 @@ import { TouchableOpacity, StyleSheet, View, Text, Alert } from "react-native";
 //react-native-action-sheet comes with the gifted-chat packages
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
-import MapView from 'react-native-maps';
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+
 
 //props provides from GiftedChat
-const CustomActions = ({wrapperStyle, iconTextStyle}) => {
+const CustomActions = ({wrapperStyle, iconTextStyle, onSend, storage}) => {
     // return a reference to Gifted Chat’s ActionSheet
     const actionSheet = useActionSheet();
     //display a menu  with define actions for the user
@@ -34,24 +34,36 @@ const CustomActions = ({wrapperStyle, iconTextStyle}) => {
         );
     };
 
-//choose a picture from 
+//picks a picture from devices's library
     const pickImage = async () => {
         let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (permissions?.granted) {
           let result = await ImagePicker.launchImageLibraryAsync();
           if (!result.canceled){
-            console.log('uploading and uploading the image occurs here');
+            const imageURI = result.assets[0].uri;
+            const uniqueRefString = generateReference(imageURI);
+            const response = await fetch(imageURI);
+            const blob = await response.blob();
+            const newUploadRef = ref(storage, uniqueRefString);
+            //upload an image file blob using the Firebase Storage method
+            uploadBytes(newUploadRef, blob).then(async (snapshot) => {
+                console.log('File has been uploaded successfully');
+                const imageURL = await getDownloadURL(snapshot.ref)
+                onSend({image: imageURL})
+            });
           } else Alert.alert ("Permissions haven't been granted");
         }
+      }
+      const generateReference =(uri) =>{
+        const timeStamp =(new Date()).getTime();
+        const imageName = uri.split("/")[uri.split("/").length -1];
+        return `${userID}-${timeStamp}-${imageName}`;
       }
 
       const takePhoto = async () => {
         let permissions = await ImagePicker.requestCameraPermissionsAsync();
         if (permissions?.granted) {
-          
           let result = await ImagePicker.launchCameraAsync();
-    
-          
           if (!result.canceled){
             console.log('uploading and uploading the image occurs here');
             }  else Alert.alert("Permissions haven't been granted");
@@ -64,7 +76,13 @@ const CustomActions = ({wrapperStyle, iconTextStyle}) => {
         if (permissions?.granted) {
           const location = await Location.getCurrentPositionAsync({});
           if(location){
-            console.log('sending the location occurs here');
+            onSend({
+                location:{
+                location:location.coords.longitude,
+                latitude: location.coords.latitude,
+            },
+        });
+           
           }else Alert.alert('Error occurred while fetching location');
         } else Alert.alert("Permissions to read location aren't granted");
         
