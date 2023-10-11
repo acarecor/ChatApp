@@ -59,13 +59,13 @@ npx expo install react-native-maps
 
 ### Firebase Configuration
 1. Use existing Google credentials to sign in and create a new Firebase account
-2. Create a project or Add project and name it (disable Google Analytics)
+2. Create a project and name it (disable Google Analytics)
 3. On the Firebase dashboard click on Build: Firestore Database and create a database 
 4. To allow read and write queries to be performed from a mobile or web application, click on the Rules tab of the Firestore control panel and change false to true.
 
 ### Firestore configuration 
 1. In the terminal inside the project, install Firestore (via Firebase): 
- 
+
 ```shell
 npm install firebase@10.3.1 --save
 ```
