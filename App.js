@@ -65,7 +65,7 @@ const App = () => {
           component={Start}
           options={{ headerTitleAlign: "center" }}
         ></Stack.Screen>
-        <Stack.Screen name="ChatApp" options={{ headerTitleAlign: "center" }}>
+        <Stack.Screen name="Chat" options={{ headerTitleAlign: "center" }}>
           {(props) => (
             <Chat
               isConnected={connectionStatus.isConnected}

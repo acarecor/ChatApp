@@ -59,7 +59,7 @@ const Start = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <View>
-            <Text style={styles.titleTex}>Chat</Text>
+            <Text style={styles.titleTex}>ChatApp</Text>
           </View>
           <View style={styles.boxStart}>
             <View>
