@@ -14,6 +14,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomActions from './CustomActions';
 
 // render the screen2, use props route, navigation,  data base (db), isConnected
 const Chat = ({ db, route, navigation, isConnected }) => {
@@ -76,7 +77,7 @@ const Chat = ({ db, route, navigation, isConnected }) => {
   const onSend = (newMessages) => {
     addDoc(collection(db, 'messages'), newMessages[0]);
   };
-
+ //functions to customize rendering behavior on GiftedChat
   //function to change the color of the default speech bubble of GiftedChat
   const renderBubble = (props) => {
     return (
@@ -94,6 +95,10 @@ const Chat = ({ db, route, navigation, isConnected }) => {
     if (isConnected) return <InputToolbar {...prop} />;
     else return null;
   };
+//passing these props to the CustomAction component 
+  const renderCustomActions =(props) => {
+return <CustomActions {...props}/>;
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: bgOptions }]}>
@@ -102,6 +107,7 @@ const Chat = ({ db, route, navigation, isConnected }) => {
           messages={messages}
           renderBubble={renderBubble}
           renderInputToolbar={renderInputToolbar}
+          renderActions={renderCustomActions}
           onSend={(messages) =>
             onSend(messages)
           } /* function onSend is called when a user send a message */
