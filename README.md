@@ -6,10 +6,10 @@ The app will provide users with a chat interface and options to share images and
 <table>
     <tr>
      <td>
-        <img src="/assets/chatapp-screenshot1.png" alt="A Screenshot of ChatApp Start screen" width="50%">
+        <img src="/assets/chatapp-screenshot1.png" alt="A Screenshot of ChatApp Start screen" width="100%">
     </td>
     <td>
-        <img src="/assets/chatapp-screenshot2.png" alt="A Screenshot of ChatApp Chat screen" width="50%" >
+        <img src="/assets/chatapp-screenshot2.png" alt="A Screenshot of ChatApp Chat screen" width="100%" >
     </td>
 </tr>
 </table>
