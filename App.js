@@ -15,6 +15,8 @@ import {
 //netinfo for dectecting a network connection
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useEffect } from "react";
+import { getStorage } from "firebase/storage";
+import {API_KEY, AUTH_DOMAIN, PROJECT_ID,STORAGE_BUCKET,MESSAGING_SENDER_ID,APP_ID} from '@env';
 
 LogBox.ignoreLogs(["AsyncStorage has been extracted from"]);
 
@@ -25,12 +27,12 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   // here ist the  web app's Firebase configuration
   const firebaseConfig = {
-    apiKey: "AIzaSyA07IWNlGbybZzjunKeN7koUkZmATWHVRA",
-    authDomain: "chat-app-12fcf.firebaseapp.com",
-    projectId: "chat-app-12fcf",
-    storageBucket: "chat-app-12fcf.appspot.com",
-    messagingSenderId: "685558259750",
-    appId: "1:685558259750:web:917d75b4a96e4249d7c6e7",
+    apiKey: API_KEY,
+    authDomain: AUTH_DOMAIN,
+    projectId: PROJECT_ID,
+    storageBucket: STORAGE_BUCKET,
+    messagingSenderId: MESSAGING_SENDER_ID,
+    appId: APP_ID,
   };
 
   // Initialize Firebase
@@ -38,6 +40,9 @@ const App = () => {
 
   // Initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app);
+
+  //initialize storage in Firebase
+  const storage = getStorage(app);
 
   // useNetInfo to define a new state that represents network connectivity status
   const connectionStatus = useNetInfo();
@@ -65,6 +70,7 @@ const App = () => {
             <Chat
               isConnected={connectionStatus.isConnected}
               db={db}
+              storage={storage}
               {...props}
             />
           )}
