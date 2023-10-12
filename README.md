@@ -4,7 +4,7 @@ ChatApp is a mobile app created with React Native.
 The app will provide users with a chat interface and options to share images and their location.
 * Screenshots 
 <div>
-<img src="/assets/screenshot-chatapp1.png" alt="A Screenshot of ChatApp Start screen" width="50%"><img src="/assets/screenshot-chatapp2.png" alt="A Screenshot of ChatApp Chat screen" width="50%">
+<img src="/assets/chatapp-screenshot1.png" alt="A Screenshot of ChatApp Start screen" width="50%"><div><img src="/assets/chatapp-screenshot2.png" alt="A Screenshot of ChatApp Chat screen" width="50%">
 </div>
 
 ## Technologies and Libraries used
