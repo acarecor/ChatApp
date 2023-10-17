@@ -72,7 +72,7 @@ const CustomActions = ({
       if (location) {
         onSend({
           location: {
-            location: location.coords.longitude,
+            longitude: location.coords.longitude,
             latitude: location.coords.latitude,
           },
         });
