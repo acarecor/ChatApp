@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { StyleSheet, View, KeyboardAvoidingView, Platform } from "react-native";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import {
@@ -18,19 +18,17 @@ const Chat = ({ db, route, navigation, isConnected, storage }) => {
   //messages state initialization
   const [messages, setMessages] = useState([]);
 
-  let unsubMessages;
+  let unsubMessages = useRef (null);
 
   useEffect(() => {
     navigation.setOptions({ title: name });
     // only fetch messages from Firestore db if there's a network connection otherwise, call loadCachedMessages():
     if (isConnected === true) {
       // unregister current onSnapshot() listener to avoid registering multiple listeners when
-      // useEffect code is re-executed.
-      if (unsubMessages) unsubMessages();
-      unsubMessages = null;
+     
       //function to fetch messages to database in real time
       const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-      unsubMessages = onSnapshot(q, (docs) => {
+      unsubMessages.current = onSnapshot(q, (docs) => {
         let newMessages = [];
         docs.forEach((doc) => {
           newMessages.push({
@@ -45,8 +43,9 @@ const Chat = ({ db, route, navigation, isConnected, storage }) => {
     } else loadCachedMessages();
 
     return () => {
-      if (unsubMessages) {
-        unsubMessages();
+      if (unsubMessages.current) {
+        unsubMessages.current();
+        unsubMessages.current = null;
       }
     };
   }, [isConnected]);
