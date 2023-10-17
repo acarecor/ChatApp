@@ -55,7 +55,7 @@ const CustomActions = ({
     }
   };
 
-//allow a photo to be taken when the user gives permission
+  //allow a photo to be taken when the user gives permission
   const takePhoto = async () => {
     let permissions = await ImagePicker.requestCameraPermissionsAsync();
     if (permissions?.granted) {
@@ -64,7 +64,7 @@ const CustomActions = ({
       else Alert.alert("Permissions haven't been granted");
     }
   };
-//to share the user's location via a map
+  //to share the user's location via a map
   const getLocation = async () => {
     let permissions = await Location.requestForegroundPermissionsAsync();
     if (permissions?.granted) {
@@ -101,7 +101,7 @@ const CustomActions = ({
       xhr.send();
     });
   };
-//uploading and sending the image as a message 
+  //uploading and sending the image as a message
   const uploadAndSendImage = async (imageURI) => {
     const uniqueRefString = generateReference(imageURI);
     const blob = await convertFileToBlob(imageURI);
@@ -114,7 +114,14 @@ const CustomActions = ({
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onActionPress}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onActionPress}
+      accessible={true}
+      accessibilityLabel="Options"
+      accessibilityHint="Options"
+      accessibilityRole="button"
+    >
       <View style={[styles.wrapper, wrapperStyle]}>
         <Text style={[styles.iconText, iconTextStyle]}>+</Text>
       </View>

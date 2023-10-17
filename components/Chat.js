@@ -83,20 +83,23 @@ const Chat = ({ db, route, navigation, isConnected, storage }) => {
   };
   //to prevent Gifted Chat from rendering the input tool bar, so user can't compose new messages
   const renderInputToolbar = (prop) => {
-    if (isConnected) return <InputToolbar {...prop}  />;
+    if (isConnected) return <InputToolbar {...prop} />;
     else return null;
   };
   //passing these props to the CustomAction component
   const renderCustomActions = (props) => {
-    return <CustomActions 
-              accessible={true}
-              accessibilityLabel="Options"
-              accessibilityHint="Options"
-              accessibilityRole="button"
-              userID={userID} 
-              storage={storage} 
-              {...props} />;
-            };
+    return (
+      <CustomActions
+        accessible={true}
+        accessibilityLabel="Options"
+        accessibilityHint="Options"
+        accessibilityRole="button"
+        userID={userID}
+        storage={storage}
+        {...props}
+      />
+    );
+  };
 
   //will check if the currentMessage contains location data
   const renderCustomView = (props) => {
@@ -147,7 +150,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     textAlign: "center",
   },
-
 });
 
 export default Chat;

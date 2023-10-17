@@ -77,6 +77,7 @@ const Start = ({ navigation }) => {
             </View>
             <View style={styles.colorOptions}>
               <TouchableOpacity
+                accessibilityLabel="background color options"
                 style={[
                   styles.colorCircle,
                   bgOptions === colors.option1 && styles.colorCircleSelected,
@@ -85,6 +86,7 @@ const Start = ({ navigation }) => {
                 onPress={() => setBgOptions(colors.option1)}
               ></TouchableOpacity>
               <TouchableOpacity
+                accessibilityLabel="background color options"
                 style={[
                   styles.colorCircle,
                   bgOptions === colors.option2 && styles.colorCircleSelected,
@@ -93,6 +95,7 @@ const Start = ({ navigation }) => {
                 onPress={() => setBgOptions(colors.option2)}
               ></TouchableOpacity>
               <TouchableOpacity
+                accessibilityLabel="background color options"
                 style={[
                   styles.colorCircle,
                   bgOptions === colors.option3 && styles.colorCircleSelected,
@@ -101,6 +104,7 @@ const Start = ({ navigation }) => {
                 onPress={() => setBgOptions(colors.option3)}
               ></TouchableOpacity>
               <TouchableOpacity
+                accessibilityLabel="background color options"
                 style={[
                   styles.colorCircle,
                   bgOptions === colors.option4 && styles.colorCircleSelected,
